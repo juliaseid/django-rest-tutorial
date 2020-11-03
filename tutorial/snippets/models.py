@@ -32,3 +32,6 @@ class Snippet(models.Model):
                                 full=True, **options)
         self.highlighted = highlight(self.code, lexer, formatter)
         super(Snippet, self).save(*args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
