@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
+from snippets.models import Snippet, SubSnip, LANGUAGE_CHOICES, STYLE_CHOICES
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -7,15 +7,23 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ['url', 'id', 'username', 'snippets']
+        fields = ['url', 'id', 'username', 'snippets', 'subsnippets']
 
 class SnippetSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
-    highlight = serializers.HyperlinkedIdentityField(view_name='snippet-highlight', format='html')
+    title = serializers.HyperlinkedIdentityField(view_name='snippet-title', format='html')
 
     class Meta:
         model = Snippet
-        fields = ['url', 'id', 'highlight', 'owner',
+        fields = ['url', 'id', 'highlight', 'owner', 'title', 'subsnippets']
+
+class SubSnipSerializer(serializers.HyperlinkedModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+    highlight = serializers.HyperlinkedIdentityField(view_name='subsnip-highlight', format='html')
+
+    class Meta:
+        model = SubSnip
+        fields = ['url', 'id', 'highlight', 'owner', 'snippet',
                 'title', 'code', 'linenos', 'language', 'style']
 
 
